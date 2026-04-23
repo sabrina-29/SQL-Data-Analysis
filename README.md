@@ -1,170 +1,144 @@
 # SQL-Data-Analysis
-📘 README — SQL Analysis Queries Explained
+SQL Analytics Project — WideWorldImporters
+A comprehensive SQL analysis project based on the WideWorldImporters sample database.
+This repository demonstrates advanced querying techniques for business insights, including revenue analysis, customer segmentation, product profitability, and churn detection.
 
-This document explains the purpose and logic behind each SQL query (Q1–Q10).
-All queries are based on the WideWorldImporters sample database.
+📘 Table of Contents
+🧬 Overview
+🛠 Technologies Used
+📊 Query Breakdown (Q1–Q10)
+🎯 Key Insights
+▶️ How to Run
+📈 Use Cases
+🧬 Overview
 
-Q1 — Yearly Revenue, Linear Annual Revenue & Growth Rate
+This project contains 10 analytical SQL queries (Q1–Q10) designed to extract meaningful business insights from transactional data.
+The queries cover:
+Revenue analysis
+Customer ranking
+Product profitability
+Supplier-product relationships
+Geographic insights
+Time-series reporting
+Churn prediction
 
-Purpose
-Calculate:
-Total income per year
-Number of distinct months with sales
-Linearized annual revenue (projecting partial-year data to 12 months)
-Year-over-year growth rate
-How it works
-YearlySales CTE
-Groups invoices by year
-Computes revenue = ExtendedPrice - TaxAmount
-Counts distinct months
-Computes linear annual revenue:
-YearlyLinearIncome
-=
-Income
-Months
-×
-12
-Growth CTE
-Uses LAG() to get previous year's revenue
-Final SELECT
-Formats numbers
-Computes growth %
-Insight
-Shows how revenue changes year-to-year and adjusts for incomplete years.
+🛠 Technologies Used
+SQL Server
+T-SQL
+Window Functions (LAG, ROW_NUMBER, DENSE_RANK)
+Aggregations (SUM, COUNT, STRING_AGG)
+CTEs (Common Table Expressions)
+Pivot Tables
 
-Q2 — Top 5 Customers per Quarter
+📊 Query Breakdown
+🔹 Q1 — Yearly Revenue & Growth Analysis
+Goal: Analyze yearly performance and growth trends
+✔ Calculates:
+Total yearly revenue
+Active sales months
+Linear annual revenue (normalized to 12 months)
+Year-over-year growth (%)
+🧠 Techniques: CTEs, LAG(), aggregation
+🔹 Q2 — Top 5 Customers per Quarter
 
-Purpose
-Find the top 5 customers in each year-quarter based on revenue.
-How it works
-Groups by year, quarter, and customer
-Calculates revenue per customer per quarter
-Uses DENSE_RANK() to rank customers
-Filters to top 5
-Insight
-Identifies the most valuable customers per quarter.
+Goal: Identify high-value customers over time
+✔ Features:
+Revenue per customer per quarter
+Ranking using DENSE_RANK()
+Top 5 filtering
+📌 Insight: Highlights top-performing customers by quarter
 
-Q3 — Top 10 Most Profitable Stock Items
+🔹 Q3 — Top 10 Most Profitable Products
+Goal: Find best-performing products
+✔ Calculates:
+Profit = ExtendedPrice - TaxAmount
+Total profit per product
+📌 Insight: Identifies key revenue drivers
 
-Purpose
-Find the top 10 products by total profit (ExtendedPrice − TaxAmount).
-How it works
-Joins invoice lines with stock items
-Sums profit per item
-Orders descending
-Takes top 10
-Insight
-Shows which products generate the most revenue.
+🔹 Q4 — Product Profit Ranking (Nominal Margin)
+Goal: Rank products by markup
+✔ Formula:
+Profit = RecommendedRetailPrice - UnitPrice
+🧠 Techniques: ROW_NUMBER()
+📌 Insight: Reveals products with highest margins
 
-Q4 — Product Profit Ranking (Nominal Profit)
+🔹 Q5 — Supplier → Product Mapping
+Goal: Aggregate products per supplier
+✔ Uses:
+STRING_AGG() for concatenation
+📌 Insight: Clean and readable supplier-product relationships
 
-Purpose
-Rank products based on recommended retail price − unit price.
-How it works
-Computes nominal profit per product
-Uses ROW_NUMBER() to rank
-Filters out items with null LastEditedBy
-Insight
-Shows which products have the highest markup.
-
-Q5 — Supplier Product Aggregation
-
-Purpose
-List each supplier with all their products in a single aggregated string.
-How it works
-Joins suppliers with archived stock items
-Uses STRING_AGG() to concatenate product IDs and names
-Insight
-Creates a readable supplier → product list mapping.
-
-Q6 — Top 5 Customers by Total Extended Price (with Geography)
-
-Purpose
-
-Find the top 5 customers by revenue, including:
+🔹 Q6 — Top 5 Customers by Revenue (with Geography)
+Goal: Combine financial and geographic insights
+✔ Includes:
 City
 Country
 Continent
 Region
-How it works
-Joins invoices → invoice lines → customers → cities → states → countries
-Groups by customer and location
-Orders by revenue
-Takes top 5
-Insight
-Shows which customers generate the most revenue and where they are located.
+📌 Insight: Identifies where top customers are located
 
-Q7 — Monthly Revenue + Cumulative Revenue + Grand Total
+🔹 Q7 — Monthly Revenue Dashboard
+Goal: Build a complete financial report
+✔ Includes:
+Monthly revenue
+Cumulative yearly revenue
+Yearly Grand Total
+🧠 Techniques: Window functions + UNION ALL
 
-Purpose
-Produce a monthly revenue report with:
-Monthly totals
-Cumulative totals per year
-A “Grand Total” row for each year
-How it works
-First SELECT: monthly totals + cumulative window function
-Second SELECT: yearly totals labeled “Grand Total”
-UNION ALL merges them
-Sorts by year and month
-Insight
-Provides a complete year-over-year monthly revenue dashboard.
+🔹 Q8 — Pivot Table (Orders by Month & Year)
+Goal: Analyze seasonal trends
+✔ Features:
+Monthly order counts
+Pivoted columns (2013–2016)
+📌 Insight: Reveals seasonality patterns
 
-Q8 — Pivot Table of Orders by Month and Year
+🔹 Q9 — Customer Churn Detection
+Goal: Identify at-risk customers
+✔ Logic:
+Average days between orders
+Days since last order
+Churn condition:
+Inactivity > 2 × Avg Interval
+📌 Output:
+Active
+Potential Churn
+🧠 Techniques: LAG(), window functions
 
-Purpose
-Create a pivot table showing number of orders per month for years 2013–2016.
-How it works
-Extracts year and month
-Pivots using COUNT(OrderYear)
-Columns become years
-Insight
-Shows seasonal patterns and order volume trends.
+🔹 Q10 — Customer Category Distribution
+Goal: Analyze customer segmentation
+✔ Special grouping:
+"Wingtip%" → one group
+"Tailspin%" → one group
 
-Q9 — Customer Churn Detection
+✔ Includes:
+Category counts
+Distribution percentages
+📌 Insight: Customer base composition
+🎯 Key Insights
+📈 Revenue trends and growth patterns
+🏆 Identification of top customers and products
+🌍 Geographic distribution of revenue
+📉 Early churn detection signals
+📊 Seasonality and order behavior
+🧩 Customer segmentation analysis
 
-Purpose
-Identify customers who may be at risk of churn.
-How it works
-OrdersWithLag
-Uses LAG() to compute days between orders
-CustomerStats
-Computes average days between orders
-Finds last order date per customer
-LastDateAll
-Finds the most recent order in the entire system
-Final SELECT
-Calculates days since last order
-Flags customers as:
-Potential Churn if inactivity > 2 × average interval
-Active otherwise
-Insight
-A simple but effective churn prediction model.
+▶️ How to Run
+Open SQL Server Management Studio (SSMS)
+Load the WideWorldImporters database
+Execute each query (Q1–Q10) individually
+Review results in the output panel
 
-Q10 — Customer Category Distribution
+📈 Use Cases
+This project is ideal for:
+📊 Data Analyst portfolios
+🎓 Academic SQL assignments
+🤖 Machine learning preprocessing
+🧪 SQL practice and interview prep
+📉 Business intelligence reporting
 
-Purpose
-Count customers per category, with special grouping:
-All names starting with Wingtip count as one
-All names starting with Tailspin count as one
-
-How it works
-
-Uses CASE to normalize names
-Counts distinct normalized names
-Computes total customers using window function
-Computes distribution %
-Insight
-Shows how customer categories are distributed across the customer base.
-
-✔️ Summary
-
-This README explains all SQL queries from Q1–Q10, covering:
-Revenue analysis
-Customer ranking
-Product profitability
-Supplier-product mapping
-Geographic revenue distribution
-Monthly and yearly financial reporting
-Pivot tables
-Churn analysis
-Customer category distribution
+⭐ Final Notes
+This project demonstrates strong skills in:
+Writing complex SQL queries
+Using analytical functions
+Translating data into actionable insights
+Structuring clean, readable SQL code
